@@ -11,6 +11,13 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
+To preview on your phone, connect both devices to the same Wi-Fi and open the
+Network URL printed by Next.js (for example, `http://192.168.1.6:3000`).
+`localhost` on your phone refers to the phone itself. If needed, run
+`npm run dev -- --hostname 0.0.0.0` to listen on the network.
+The Next.js configuration allows the computer's current LAN addresses for dev
+assets and hot reload. Restart the dev server after changing Wi-Fi networks.
+
 ### Train Staff case study
 
 The first project opens `/work/project-one`. Its editorial content is in `app/components/train-staff-case-study.js`; real screenshot paths, alternative text, and captions belong in `app/train-staff.js`. Missing screens render labelled asset slots in draft mode. Supplied screens open in a native dialog, with Escape, a close button, and focus restoration.

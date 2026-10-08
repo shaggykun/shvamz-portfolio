@@ -13,6 +13,8 @@ export default function AboutText() {
     const words = [...paragraph.querySelectorAll(".about-word")];
     const reduce = matchMedia("(prefers-reduced-motion: reduce)");
     let frame = 0;
+    let previousProgress = -1;
+    const previousFills = new Array(words.length);
     const update = () => {
       frame = 0;
       const bounds = paragraph.getBoundingClientRect();
@@ -22,8 +24,12 @@ export default function AboutText() {
       const progress = reduce.matches ? 1 : Math.min(1, Math.max(0,
         (viewport * .82 - bounds.top) / (bounds.height + viewport * .47)
       ));
+      if (progress === previousProgress) return;
+      previousProgress = progress;
       words.forEach((word, index) => {
         const fill = Math.min(1, Math.max(0, progress * words.length - index));
+        if (fill === previousFills[index]) return;
+        previousFills[index] = fill;
         word.style.setProperty("--word-fill", `${fill * 100}%`);
       });
     };

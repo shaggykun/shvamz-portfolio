@@ -33,7 +33,7 @@ export default function TrainStaffCaseStudy({ next }) {
       <p className="train-lead">An iOS and Android application for a UK-based train operating company. Designed to help railway staff find essential duty information, follow operational updates, and complete everyday tasks with greater clarity.</p>
         </div>
         <div className="train-hero-visual">
-          <Image src="/images/train-staff-hero.png" width={2800} height={2800} sizes="(max-width: 800px) 140vw, 65vw" alt="Train Staff application phone mockup showing duty route progress, facility and occupancy status, train location, and reporting actions" preload />
+          <Image src="/images/train-staff-hero.webp" width={2800} height={2800} sizes="(max-width: 800px) 140vw, 65vw" alt="Train Staff application phone mockup showing duty route progress, facility and occupancy status, train location, and reporting actions" preload />
           <div className="train-image-note train-image-note-route">
             <span>Duty context,<br />at a glance.</span>
             <svg viewBox="0 0 130 70" aria-hidden="true"><path d="M116 8C120 52 70 65 12 48M12 48l15-9M12 48l12 13" /></svg>

@@ -20,7 +20,7 @@ export default function HumBeeCaseStudy({ next }) {
           <h1>Connection first.<br /><em>Identity later.</em></h1>
           <p className="train-lead">An avatar-first social and dating concept that lets people meet through interests and conversation, then reveal their identity when both feel ready.</p>
         </div>
-        <div className="humbee-brand-visual"><Image src="/images/humbee-logo.png" width={840} height={1078} sizes="(max-width: 800px) 55vw, 24vw" alt="HumBee logo: a cream bee symbol on a coral app icon, with the HumBee wordmark" preload /></div>
+        <div className="humbee-brand-visual"><Image src="/images/humbee-logo.webp" width={840} height={1078} sizes="(max-width: 800px) 55vw, 24vw" alt="HumBee logo: a cream bee symbol on a coral app icon, with the HumBee wordmark" preload /></div>
       </div>
       <dl className="train-project-details">
         <div><dt>Product</dt><dd>Avatar-first social + dating</dd></div>

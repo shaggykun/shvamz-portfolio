@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import AboutText from "./components/about-text";
 import ContactActions from "./components/contact-actions";
 import { projects } from "./projects";
@@ -11,16 +11,140 @@ const Arrow = () => <span aria-hidden="true">↗</span>;
 
 export default function Home() {
   const portraitRef = useRef(null);
+  const creativeRef = useRef(null);
+  const creativePausedRef = useRef(false);
+  const [creativePaused, setCreativePaused] = useState(false);
+
+  useEffect(() => { creativePausedRef.current = creativePaused; }, [creativePaused]);
+
+  useEffect(() => {
+    const gallery = creativeRef.current;
+    const group = gallery.querySelector(".creative-group");
+    const reduce = matchMedia("(prefers-reduced-motion: reduce)");
+    let lap = group.getBoundingClientRect().width;
+    let pointer = null;
+    let previousX = 0;
+    let touchStart = null;
+    let touchAxis = null;
+    let remainder = 0;
+    let previousTime = performance.now();
+    let frame;
+    const resize = new ResizeObserver(() => { lap = group.getBoundingClientRect().width; });
+    resize.observe(group);
+    const moveBy = (distance) => {
+      const next = gallery.scrollLeft + distance + remainder;
+      const target = !reduce.matches && lap > 0 ? ((next % lap) + lap) % lap : next;
+      gallery.scrollLeft = target;
+      // Keep fractional movement on browsers that round scrollLeft.
+      remainder = Math.abs(target - gallery.scrollLeft) < 1 ? target - gallery.scrollLeft : 0;
+    };
+    const tick = (time) => {
+      const elapsed = Math.min(time - previousTime, 50);
+      previousTime = time;
+      if (!reduce.matches && pointer === null && !creativePausedRef.current) {
+        moveBy(lap * elapsed / 60000);
+      }
+      frame = requestAnimationFrame(tick);
+    };
+    const down = (event) => {
+      if (event.pointerType === "touch" || !event.isPrimary || (event.pointerType === "mouse" && event.button !== 0)) return;
+      pointer = event.pointerId;
+      previousX = event.clientX;
+      gallery.setPointerCapture(pointer);
+      gallery.classList.add("is-dragging");
+    };
+    const move = (event) => {
+      if (event.pointerId !== pointer) return;
+      moveBy(previousX - event.clientX);
+      previousX = event.clientX;
+    };
+    const end = (event) => {
+      if (event.pointerId !== pointer) return;
+      pointer = null;
+      gallery.classList.remove("is-dragging");
+      if (gallery.hasPointerCapture(event.pointerId)) gallery.releasePointerCapture(event.pointerId);
+    };
+    const touchEnd = () => {
+      if (!touchStart) return;
+      touchStart = null;
+      touchAxis = null;
+      pointer = null;
+      gallery.classList.remove("is-dragging");
+    };
+    const touchDown = (event) => {
+      touchEnd();
+      if (event.touches.length !== 1) return;
+      const touch = event.touches[0];
+      touchStart = { x: touch.clientX, y: touch.clientY, id: touch.identifier };
+      previousX = touch.clientX;
+      pointer = `touch-${touch.identifier}`;
+    };
+    const touchMove = (event) => {
+      if (!touchStart) return;
+      if (event.touches.length !== 1) { touchEnd(); return; }
+      const touch = event.touches[0];
+      if (touch.identifier !== touchStart.id) return;
+      if (!touchAxis) {
+        const dx = Math.abs(touch.clientX - touchStart.x);
+        const dy = Math.abs(touch.clientY - touchStart.y);
+        if (dx === 0 && dy === 0) return;
+        touchAxis = dx > dy ? "horizontal" : "vertical";
+      }
+      if (touchAxis === "vertical") { touchEnd(); return; }
+      if (!event.cancelable) { touchEnd(); return; }
+      // Own horizontal motion so native momentum cannot fight autoplay.
+      event.preventDefault();
+      gallery.classList.add("is-dragging");
+      moveBy(previousX - touch.clientX);
+      previousX = touch.clientX;
+    };
+    const key = (event) => {
+      if (!["ArrowLeft", "ArrowRight"].includes(event.key)) return;
+      event.preventDefault();
+      moveBy(event.key === "ArrowLeft" ? -300 : 300);
+    };
+    const preventDrag = (event) => event.preventDefault();
+    gallery.addEventListener("touchstart", touchDown, { passive: true });
+    gallery.addEventListener("touchmove", touchMove, { passive: false });
+    gallery.addEventListener("touchend", touchEnd);
+    gallery.addEventListener("touchcancel", touchEnd);
+    gallery.addEventListener("pointerdown", down);
+    gallery.addEventListener("pointermove", move);
+    gallery.addEventListener("pointerup", end);
+    gallery.addEventListener("pointercancel", end);
+    gallery.addEventListener("lostpointercapture", end);
+    gallery.addEventListener("keydown", key);
+    gallery.addEventListener("dragstart", preventDrag);
+    frame = requestAnimationFrame(tick);
+    return () => {
+      cancelAnimationFrame(frame);
+      resize.disconnect();
+      gallery.removeEventListener("touchstart", touchDown);
+      gallery.removeEventListener("touchmove", touchMove);
+      gallery.removeEventListener("touchend", touchEnd);
+      gallery.removeEventListener("touchcancel", touchEnd);
+      gallery.removeEventListener("pointerdown", down);
+      gallery.removeEventListener("pointermove", move);
+      gallery.removeEventListener("pointerup", end);
+      gallery.removeEventListener("pointercancel", end);
+      gallery.removeEventListener("lostpointercapture", end);
+      gallery.removeEventListener("keydown", key);
+      gallery.removeEventListener("dragstart", preventDrag);
+    };
+  }, []);
 
   useEffect(() => {
     const wrapper = portraitRef.current;
     const card = wrapper.querySelector(".t-tilt-card");
     const ripple = wrapper.querySelector(".hero-portrait-ripple");
     let rippleAnimation;
+    let activeTouch = null;
+    let pendingTouch = null;
+    let holdTimer;
     const reduce = matchMedia("(prefers-reduced-motion: reduce)");
     const hover = matchMedia("(hover: hover) and (pointer: fine)");
     const enter = (event) => {
-      if (!hover.matches || event.pointerType !== "mouse") return;
+      if (event.pointerType === "mouse" ? !hover.matches : event.pointerId !== activeTouch) return;
       const bounds = wrapper.getBoundingClientRect();
       const x = Math.max(0, Math.min(bounds.width, event.clientX - bounds.left));
       const y = Math.max(0, Math.min(bounds.height, event.clientY - bounds.top));
@@ -43,13 +167,16 @@ export default function Home() {
       });
     };
     const reset = () => {
+      clearTimeout(holdTimer);
+      pendingTouch = null;
+      activeTouch = null;
       wrapper.classList.remove("is-hover");
       card.classList.remove("is-tilting");
       ["--tilt-rx", "--tilt-ry"].forEach((key) => card.style.setProperty(key, "0deg"));
       ["--portrait-x", "--portrait-y"].forEach((key) => card.style.setProperty(key, "0px"));
     };
     const track = (event) => {
-      if (reduce.matches || !hover.matches || event.pointerType !== "mouse") return;
+      if (reduce.matches || (event.pointerType === "mouse" ? !hover.matches : event.pointerId !== activeTouch)) return;
       const bounds = wrapper.getBoundingClientRect();
       const x = Math.min(1, Math.max(0, (event.clientX - bounds.left) / bounds.width));
       const y = Math.min(1, Math.max(0, (event.clientY - bounds.top) / bounds.height));
@@ -62,18 +189,59 @@ export default function Home() {
       card.style.setProperty("--portrait-x", `${(x - 0.5) * 24}px`);
       card.style.setProperty("--portrait-y", `${(y - 0.5) * 18}px`);
     };
-    wrapper.addEventListener("pointerenter", enter);
-    wrapper.addEventListener("pointermove", track);
-    wrapper.addEventListener("pointerleave", reset);
-    wrapper.addEventListener("pointercancel", reset);
+    const touchPoint = (touch) => ({
+      pointerType: "touch", pointerId: touch.identifier,
+      clientX: touch.clientX, clientY: touch.clientY,
+    });
+    const startTouch = (event) => {
+      reset();
+      if (reduce.matches || event.touches.length !== 1) return;
+      const point = touchPoint(event.touches[0]);
+      pendingTouch = point;
+      holdTimer = setTimeout(() => {
+        if (!pendingTouch) return;
+        activeTouch = point.pointerId;
+        enter(point);
+        track(point);
+      }, 350);
+    };
+    const moveTouch = (event) => {
+      if (event.touches.length !== 1) { reset(); return; }
+      const point = touchPoint(event.touches[0]);
+      if (activeTouch === point.pointerId) {
+        if (!event.cancelable) { reset(); return; }
+        event.preventDefault();
+        track(point);
+      } else if (pendingTouch && Math.hypot(point.clientX - pendingTouch.clientX, point.clientY - pendingTouch.clientY) > 10) {
+        // A swipe before the hold completes belongs to the page.
+        reset();
+      }
+    };
+    const mouseEnter = (event) => { if (event.pointerType === "mouse") enter(event); };
+    const mouseMove = (event) => { if (event.pointerType === "mouse") track(event); };
+    const mouseLeave = (event) => { if (event.pointerType === "mouse") reset(); };
+    const preventTouchMenu = (event) => { if (pendingTouch || activeTouch !== null) event.preventDefault(); };
+    wrapper.addEventListener("touchstart", startTouch, { passive: true });
+    wrapper.addEventListener("touchmove", moveTouch, { passive: false });
+    wrapper.addEventListener("touchend", reset);
+    wrapper.addEventListener("touchcancel", reset);
+    wrapper.addEventListener("contextmenu", preventTouchMenu);
+    wrapper.addEventListener("pointerenter", mouseEnter);
+    wrapper.addEventListener("pointermove", mouseMove);
+    wrapper.addEventListener("pointerleave", mouseLeave);
     reduce.addEventListener("change", reset);
     hover.addEventListener("change", reset);
     return () => {
       rippleAnimation?.cancel();
-      wrapper.removeEventListener("pointerenter", enter);
-      wrapper.removeEventListener("pointermove", track);
-      wrapper.removeEventListener("pointerleave", reset);
-      wrapper.removeEventListener("pointercancel", reset);
+      clearTimeout(holdTimer);
+      wrapper.removeEventListener("touchstart", startTouch);
+      wrapper.removeEventListener("touchmove", moveTouch);
+      wrapper.removeEventListener("touchend", reset);
+      wrapper.removeEventListener("touchcancel", reset);
+      wrapper.removeEventListener("contextmenu", preventTouchMenu);
+      wrapper.removeEventListener("pointerenter", mouseEnter);
+      wrapper.removeEventListener("pointermove", mouseMove);
+      wrapper.removeEventListener("pointerleave", mouseLeave);
       reduce.removeEventListener("change", reset);
       hover.removeEventListener("change", reset);
     };
@@ -100,7 +268,7 @@ export default function Home() {
               <div className="hero-portrait-background" aria-hidden="true"><div className="hero-portrait-ripple" />
                 <div className="hero-portrait-details" />
               </div>
-              <div className="hero-portrait-person"><Image src="/images/hero-portrait-transparent-v2.png" alt="Shivam standing with casually crossed arms" fill sizes="(max-width: 800px) 100vw, 40vw" preload /></div>
+              <div className="hero-portrait-person"><Image src="/images/hero-portrait-transparent-v2.webp" alt="Shivam standing with casually crossed arms" fill sizes="(max-width: 800px) 100vw, 40vw" preload /></div>
               <div className="t-tilt-glare" aria-hidden="true" />
             </div>
           </div>
@@ -114,7 +282,7 @@ export default function Home() {
           <div className="about-content">
             <AboutText />
             <div className="about-illustration" data-reveal>
-              <Image src="/images/about-designer-v3.png" width={1024} height={1024} sizes="(max-width: 800px) 80vw, 32vw" alt="Illustration of a designer in a charcoal hoodie working on a laptop" />
+              <Image src="/images/about-designer-v3.webp" width={1024} height={1024} sizes="(max-width: 800px) 80vw, 32vw" alt="Illustration of a designer in a charcoal hoodie working on a laptop" />
             </div>
           </div>
         </section>
@@ -123,9 +291,9 @@ export default function Home() {
           <div className="section-heading" data-reveal><h2>MY PROJECTS</h2></div>
           <div className="project-grid">
             {projects.map((project, index) => (
-              <Link className="project-card" href={`/work/${project.slug}`} key={project.slug} data-reveal>
-                <div className={`project-card-image visual-${index + 1}`}>
-                  {project.slug === "project-four" ? <Image className="humbee-project-logo" src="/images/humbee-logo.png" width={840} height={1078} sizes="165px" alt="HumBee avatar-first social network logo" /> : <div className="browser-mockup"><i /><i /><i /><div>{project.title}</div></div>}
+              <Link className="project-card home-project-card" href={`/work/${project.slug}`} key={project.slug} data-reveal>
+                <div className={`project-card-image visual-${index + 1}`} style={project.showcase || ["project-one", "project-two"].includes(project.slug) ? { aspectRatio: "1920 / 1320", minHeight: 0 } : undefined}>
+                  {project.showcase ? <Image src={project.showcase.src} alt={project.showcase.alt} fill sizes="(max-width: 800px) 100vw, 50vw" style={{ objectFit: "contain" }} /> : project.slug === "project-one" ? <Image src="/images/rail-operations-showcase.webp" alt="Train staff application design showcase" fill sizes="(max-width: 800px) 100vw, 50vw" style={{ objectFit: "contain" }} /> : project.slug === "project-two" ? <Image src="/images/adani-electricity-showcase.webp" alt="Adani Electricity application design showcase" fill sizes="(max-width: 800px) 100vw, 50vw" style={{ objectFit: "contain" }} /> : project.slug === "project-four" ? <Image className="humbee-project-logo" src="/images/humbee-logo.webp" width={840} height={1078} sizes="165px" alt="HumBee avatar-first social network logo" /> : <div className="browser-mockup"><i /><i /><i /><div>{project.title}</div></div>}
                   <span className="view-badge">View case <Arrow /></span>
                 </div>
                 <div className="project-card-copy">
@@ -134,6 +302,26 @@ export default function Home() {
                 </div>
               </Link>
             ))}
+          </div>
+        </section>
+
+        <section className="creative-section" aria-label="Creative work">
+          <div className="creative-heading">
+            <h2>Beyond UIUX Design</h2>
+            <button className="pill creative-pause" type="button" aria-pressed={creativePaused} aria-controls="creative-carousel" onClick={() => setCreativePaused((paused) => !paused)}>{creativePaused ? "Resume motion" : "Pause motion"}</button>
+          </div>
+          <div className="creative-marquee" ref={creativeRef} tabIndex={0} role="region" aria-label="Beyond UIUX Design gallery. Drag left or right, or use arrow keys." id="creative-carousel" data-paused={creativePaused}>
+            <div className="creative-track">
+              {[false, true].map((duplicate) => <div className="creative-group" key={String(duplicate)} aria-hidden={duplicate ? "true" : undefined} inert={duplicate ? true : undefined}>
+                {[
+                  ["dapper-branding.webp", "Dapper branding"],
+                  ["swagatam-dosa-logo.webp", "Swagatam Dosa logo"],
+                  ["va-creations.webp", "VA Creations"],
+                ].map(([file, title]) => <article className="creative-card" key={file}><div className="creative-media"><Image src={`/images/creative/${file}`} alt={duplicate ? "" : title} fill sizes="(max-width: 800px) 76vw, 340px" /></div></article>)}
+                <article className="creative-card"><div className="creative-media creative-video"><video src="/videos/tagbudy-animation.mp4" autoPlay muted loop playsInline preload="auto" aria-label={duplicate ? undefined : "Tagbudy animation"} /></div></article>
+                {[1, 2, 3, 4, 5].map((number) => <article className={`creative-card creative-coming-${number}`} key={number}><div className="creative-media creative-placeholder"><span className="creative-placeholder-mark" aria-hidden="true">✳</span><span className="creative-placeholder-status">COMING SOON</span></div></article>)}
+              </div>)}
+            </div>
           </div>
         </section>
 

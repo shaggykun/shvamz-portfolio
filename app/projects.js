@@ -1,6 +1,8 @@
 export const projects = [
   { slug: "project-one", title: "UK based Train Staff Application", summary: "A mobile application for a UK-based train operating company, supporting railway staff through their daily operations.", year: "2025–2026", role: "UI/UX Designer & UX Researcher" },
-  { slug: "project-two", title: "Project Two", summary: "Mobile experience case study — replace with your project summary.", year: "2025", role: "Product Design" },
+  { slug: "project-two", title: "Adani Electricity mobile application", summary: "A customer-facing mobile interface for electricity bills, consumption, services, and support.", year: "UI design", role: "UI Designer · Competitive Analysis" },
   { slug: "project-three", title: "Project Three", summary: "Brand and digital experience — replace with your project summary.", year: "2024", role: "Brand & UI" },
   { slug: "project-four", title: "HumBee: An avatar based social network", summary: "Avatar-first discovery, private conversation, and identity reveal by mutual choice.", year: "Research concept", role: "UX Research & Concept Direction" },
+  { slug: "aditya-birla-dms", title: "Aditya Birla Document Management", summary: "A document management interface for organizing files, tracking approvals, and monitoring document expiry.", year: "UI design", role: "UI Designer", showcase: { src: "/images/aditya-birla-dms-showcase.webp", alt: "Aditya Birla document management showcase with document lists, dashboard, and attachment upload screens" } },
+  { slug: "information-risk-management", title: "Information Risk Management", summary: "An enterprise interface for managing information security controls, user roles, and audit workflows.", year: "UI design", role: "UI Designer", showcase: { src: "/images/information-risk-management-showcase.webp", alt: "Information Risk Management showcase with login, role management, and security control screens" } },
 ];
