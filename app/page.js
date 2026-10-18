@@ -4,12 +4,17 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import AboutText from "./components/about-text";
+import AboutIllustration from "./components/about-illustration";
+import CapabilityCloud from "./components/capability-cloud";
+import usePageMotion from "./components/use-page-motion";
 import ContactActions from "./components/contact-actions";
+import BrandMarquee from "./components/brand-marquee";
 import { projects } from "./projects";
 
-const Arrow = () => <span aria-hidden="true">↗</span>;
 
 export default function Home() {
+  const mainRef = useRef(null);
+  usePageMotion(mainRef);
   const portraitRef = useRef(null);
   const creativeRef = useRef(null);
   const creativePausedRef = useRef(false);
@@ -247,20 +252,10 @@ export default function Home() {
     };
   }, []);
 
-  useEffect(() => {
-    const items = document.querySelectorAll("[data-reveal]");
-    const observer = new IntersectionObserver(
-      (entries) => entries.forEach((entry) => entry.isIntersecting && entry.target.classList.add("is-visible")),
-      { threshold: 0.14 }
-    );
-    items.forEach((item) => observer.observe(item));
-    return () => observer.disconnect();
-  }, []);
-
 
   return (
     <>
-      <main id="content">
+      <main id="content" ref={mainRef}>
         <section className="hero" id="top">
           <div className="hero-name">SENIOR PRODUCT DESIGNER</div>
           <div className="hero-portrait t-tilt" ref={portraitRef}>
@@ -272,18 +267,18 @@ export default function Home() {
               <div className="t-tilt-glare" aria-hidden="true" />
             </div>
           </div>
-          <h1>A designer<br />who moves<br /><em>numbers.</em></h1>
+          <h1>A designer<br className="hero-heading-break" /><span className="hero-heading-space"> </span>who<br className="hero-heading-desktop-break" /><span className="hero-heading-mobile-space"> </span><span className="hero-heading-end">moves<br className="hero-heading-break" /><span className="hero-heading-space"> </span><em>numbers.</em></span></h1>
           <p className="hero-copy">Hi, I&apos;m Shivam. For 6 years, I&apos;ve simplified complex products across <strong>FinTech, B2C, B2B and SaaS</strong> into clear, useful experiences.</p>
           <div className="hero-trust"><span>6 years in design</span><span>UX research</span><span>UI design</span><span>Product</span></div>
-          <a className="hero-cta" href="#work">Explore my projects <Arrow /></a>
+          <a className="hero-cta" href="#work">Explore my projects</a>
         </section>
+
+        <BrandMarquee />
 
         <section className="about-intro section-light" id="about">
           <div className="about-content">
             <AboutText />
-            <div className="about-illustration" data-reveal>
-              <Image src="/images/about-designer-v3.webp" width={1024} height={1024} sizes="(max-width: 800px) 80vw, 32vw" alt="Illustration of a designer in a charcoal hoodie working on a laptop" />
-            </div>
+            <AboutIllustration />
           </div>
         </section>
 
@@ -294,15 +289,15 @@ export default function Home() {
               <Link className="project-card home-project-card" href={`/work/${project.slug}`} key={project.slug} data-reveal>
                 <div className={`project-card-image visual-${index + 1}`} style={project.showcase || ["project-one", "project-two"].includes(project.slug) ? { aspectRatio: "1920 / 1320", minHeight: 0 } : undefined}>
                   {project.showcase ? <Image src={project.showcase.src} alt={project.showcase.alt} fill sizes="(max-width: 800px) 100vw, 50vw" style={{ objectFit: "contain" }} /> : project.slug === "project-one" ? <Image src="/images/rail-operations-showcase.webp" alt="Train staff application design showcase" fill sizes="(max-width: 800px) 100vw, 50vw" style={{ objectFit: "contain" }} /> : project.slug === "project-two" ? <Image src="/images/adani-electricity-showcase.webp" alt="Adani Electricity application design showcase" fill sizes="(max-width: 800px) 100vw, 50vw" style={{ objectFit: "contain" }} /> : project.slug === "project-four" ? <Image className="humbee-project-logo" src="/images/humbee-logo.webp" width={840} height={1078} sizes="165px" alt="HumBee avatar-first social network logo" /> : <div className="browser-mockup"><i /><i /><i /><div>{project.title}</div></div>}
-                  <span className="view-badge">View case <Arrow /></span>
+                  <span className="view-badge">View case</span>
                 </div>
                 <div className="project-card-copy">
                   <div><h3>{project.title}</h3><p>{project.summary}</p></div>
-                  <span>{project.year}</span>
                 </div>
               </Link>
             ))}
           </div>
+          <Link className="wide-link" href="/work" data-reveal>Explore More Projects</Link>
         </section>
 
         <section className="creative-section" aria-label="Creative work">
@@ -327,16 +322,18 @@ export default function Home() {
 
         <section className="experience section-light">
           <div className="section-heading dark" data-reveal><h2>HOW I CAN HELP</h2></div>
-          <div className="capability-list">{[
-            ["01", "UX research", "Interviews, usability studies, research synthesis, and actionable insights."],
-            ["02", "Experience design", "User flows, information architecture, wireframes, and prototypes."],
-            ["03", "Interface design", "Appealing, accessible interfaces and scalable design systems."],
-            ["04", "Interaction design", "Motion and micro-interactions that make products easier to understand."],
-          ].map(([num, title, copy]) => <article key={num} data-reveal><span>{num}.</span><h3>{title}</h3><p>{copy}</p></article>)}</div>
+          <CapabilityCloud>{[
+            ["UX research", "M15 15l6 6M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"],
+            ["User interface design", "M3 4h18v16H3ZM3 9h18M9 9v11"],
+            ["Experience design", "M5 5h5v5H5ZM14 14h5v5h-5ZM10 7h7v7M7 10v7h7"],
+            ["Motion graphics", "M8 4l13 8-13 8ZM3 7v10"],
+            ["Brand identity", "M12 3l3 6 6 3-6 3-3 6-3-6-6-3 6-3Z"],
+            ["Interaction design", "M5 3l3 16 4-6 7-2ZM16 3v3M19 6h3"],
+          ].map(([title, icon], index) => <div className="capability-float" key={title} style={{ "--card-index": index }}><div className="capability-scatter"><article className="capability-card"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={icon} /></svg><h3>{title}</h3><div className="capability-glow" aria-hidden="true" /></article></div></div>)}</CapabilityCloud>
         </section>
 
         <section className="contact" id="contact">
-          <h2 data-reveal>LET&apos;S MAKE<br />SOMETHING<br />MEANINGFUL.</h2>
+          <h2 data-reveal>Let&apos;s connect and create something meaningful.</h2>
           <ContactActions />
         </section>
       </main>

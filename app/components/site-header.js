@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import BrandWordmark from "./brand-wordmark";
 
 export default function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -45,7 +46,7 @@ export default function SiteHeader() {
   return (<>
       <a className="skip-link" href="#content">Skip to content</a>
       <header className="site-header">
-        <Link className="wordmark" href="/" aria-label="Shivam home">SHIVAM</Link>
+        <Link className="wordmark" href="/" aria-label="Shivam Designs home"><BrandWordmark /></Link>
         <div className="header-meta">
           <div className="location">India<br /><small>IST (GMT+5:30)</small></div>
           <Link className="pill pill-small" href="/contact">Let&apos;s talk</Link>

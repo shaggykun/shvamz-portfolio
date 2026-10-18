@@ -25,7 +25,7 @@ export default function TrainStaffCaseStudy({ next }) {
   return <main id="content" className="train-case train-case-refined">
     <ScrollTop />
     <header className="train-hero">
-      <Link className="train-back" href="/work">← All projects</Link>
+      <Link className="train-back" href="/work">All projects</Link>
       <div className="train-hero-layout">
         <div className="train-hero-copy">
       <div className="train-hero-meta"><p className="train-eyebrow">UK based Train Staff Application</p><span className="train-launch-label">Launched</span></div>
@@ -109,6 +109,6 @@ export default function TrainStaffCaseStudy({ next }) {
       </article>
     </div>
 
-    <section className="train-ending"><p className="train-eyebrow">Keep exploring</p><h2>On to the next project.</h2><Link href={`/work/${next.slug}`} className="train-next-card"><div><h3>{next.title}</h3></div><span aria-hidden="true">↗</span></Link><Link className="train-back" href="/work">← All projects</Link></section>
+    <section className="train-ending"><p className="train-eyebrow">Keep exploring</p><h2>On to the next project.</h2><Link href={`/work/${next.slug}`} className="train-next-card"><div><h3>{next.title}</h3></div></Link><Link className="train-back" href="/work">All projects</Link></section>
   </main>;
 }

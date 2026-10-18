@@ -31,6 +31,7 @@ export default function AboutText() {
         if (fill === previousFills[index]) return;
         previousFills[index] = fill;
         word.style.setProperty("--word-fill", `${fill * 100}%`);
+        word.style.setProperty("--word-glow", reduce.matches ? 0 : Math.sin(fill * Math.PI).toFixed(3));
       });
     };
     const schedule = () => {

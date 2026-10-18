@@ -26,7 +26,7 @@ export default function AdaniCaseStudy({ next }) {
   return <main id="content" className="train-case train-case-refined adani-case">
     <ScrollTop />
     <header className="train-hero">
-      <Link className="train-back" href="/work">← All projects</Link>
+      <Link className="train-back" href="/work">All projects</Link>
       <div className="train-hero-layout">
         <div className="train-hero-copy"><p className="train-eyebrow">Adani Electricity · Mobile application</p><h1>Everyday energy.<br /><em>Clearer control.</em></h1><p className="train-lead">A customer-facing interface that brings bills, electricity consumption, essential services, and support into one mobile experience. My work focused on UI design, supported by competitive analysis.</p></div>
         <div className="adani-hero-visual"><div className="adani-hero-halo" aria-hidden="true" /><Image src="/images/adani/welcome.webp" width={750} height={1624} sizes="(max-width: 800px) 56vw, 260px" alt={screens.welcome.alt} preload /><span className="adani-visual-label">Your electricity. At a glance.</span></div>
@@ -78,6 +78,6 @@ export default function AdaniCaseStudy({ next }) {
         <p className="train-evidence-note">This case study presents supplied UI designs and the confirmed competitive-analysis contribution. Testing results and launch outcomes have not been supplied.</p>
       </Section>
     </article></div>
-    <section className="train-ending"><p className="train-eyebrow">Keep exploring</p><h2>On to the next project.</h2><Link href={`/work/${next.slug}`} className="train-next-card"><div><h3>{next.title}</h3><p>{next.summary}</p></div><span aria-hidden="true">↗</span></Link><Link className="train-back" href="/work">← All projects</Link></section>
+    <section className="train-ending"><p className="train-eyebrow">Keep exploring</p><h2>On to the next project.</h2><Link href={`/work/${next.slug}`} className="train-next-card"><div><h3>{next.title}</h3><p>{next.summary}</p></div></Link><Link className="train-back" href="/work">All projects</Link></section>
   </main>;
 }
