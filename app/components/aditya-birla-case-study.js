@@ -1,4 +1,4 @@
-import Image from "next/image";
+import DmsHeroImage from "./dms-hero-image";
 import Link from "next/link";
 import CaseStudyNav from "./case-study-nav";
 import CaseStudyScreen from "./case-study-screen";
@@ -8,10 +8,25 @@ const sections = [
   ["dms-overview", "Overview"], ["dms-structure", "Information structure"],
   ["dms-dashboard", "Dashboard"], ["dms-library", "Document library"],
   ["dms-approval", "Upload & approval"], ["dms-interface", "Interface decisions"],
-  ["dms-next", "Future opportunities"], ["dms-reflection", "Reflection"],
+  ["dms-reflection", "Reflection"],
 ];
 const dashboard = { src: "/images/aditya-birla-dms-cover.webp", alt: "Aditya Birla document management dashboard showing activity metrics, document status, charts, and a searchable document table" };
 const workflow = { src: "/images/aditya-birla-dms-showcase.webp", alt: "Aditya Birla document management designs showing a document list, personal dashboard, and Add Attachment form" };
+
+const screens = {
+  projects: { src: "/images/aditya-birla/projects.webp", alt: "Projects with expandable unit and folder navigation, column filters, and project actions" },
+  knowledge: { src: "/images/aditya-birla/knowledge-sharing.webp", alt: "Knowledge Sharing document table with department, unit, uploader, and download actions" },
+  search: { src: "/images/aditya-birla/global-search.webp", alt: "Global document search results with date, unit, category, and subcategory filters" },
+  attachment: { src: "/images/aditya-birla/add-attachment.webp", alt: "Add Attachment form with business context, reference validation, dates, and file upload" },
+  departments: { src: "/images/aditya-birla/departments.webp", alt: "Department folder grid with document counts and list and grid controls" },
+  mobileUpload: { src: "/images/aditya-birla/mobile-upload.webp", alt: "Mobile document upload success message and Pending for approval status" },
+  mobileEmpty: { src: "/images/aditya-birla/mobile-empty.webp", alt: "Mobile empty document library with an Add attachment action" },
+  mobileActions: { src: "/images/aditya-birla/mobile-actions.webp", alt: "Mobile Pending for action queue with Actions and History tabs" },
+  mobileDashboard: { src: "/images/aditya-birla/mobile-dashboard.webp", alt: "Mobile dashboard with document totals, pending approvals, charts, and action table" },
+};
+function ScreenFigure({ screen, caption, mobile = false }) {
+  return <figure className={`dms-screen-figure${mobile ? " dms-mobile-screen" : ""}`}><CaseStudyScreen screen={screen} showLabel={false} /><figcaption>{caption}</figcaption></figure>;
+}
 
 function Section({ id, number, title, children }) {
   return <section className="train-section" id={id}><div className="train-section-title"><span>{number}</span><h2>{title}</h2></div>{children}</section>;
@@ -25,21 +40,21 @@ export default function AdityaBirlaCaseStudy({ next }) {
       <div className="train-hero-layout">
         <div className="train-hero-copy">
           <p className="train-eyebrow">Aditya Birla · Document Management</p>
-          <h1>Shared knowledge.<br /><em>Clearer control.</em></h1>
-          <p className="train-lead">An internal workspace for the Aditya Birla team to find, upload, and review documents. A familiar shared-drive experience, shaped around business units, document categories, and supervisor approvals.</p>
+          <h1>Find the file.<br /><em>Keep work moving.</em></h1>
+          <p className="train-lead">I designed a document management workspace for the Aditya Birla team. It helps people find files by department or unit, upload documents, and track what needs approval.</p>
         </div>
-        <div className="dms-hero-visual"><Image src={workflow.src} alt={workflow.alt} width={1920} height={1320} sizes="(max-width: 800px) 100vw, 50vw" loading="eager" /></div>
+        <DmsHeroImage src={workflow.src} alt={workflow.alt} />
       </div>
       <dl className="train-project-details">{[
-        ["My role", "UI Designer"], ["Design tool", "Figma"], ["Platform", "Internal web application"], ["Core workflow", "Find · Upload · Review"],
+        ["My role", "UI Designer"], ["Design tool", "Figma"], ["Platform", "Responsive web application"], ["Core workflow", "Find · Upload · Review"],
       ].map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}</dl>
     </header>
 
     <div className="train-editorial-layout">
       <aside className="train-section-nav"><CaseStudyNav sections={sections} /></aside>
       <article className="train-article">
-        <Section id="dms-overview" number="01" title="A shared drive with a business context.">
-          <div className="train-reading"><p>The team needed a place to work with documents across different units, categories, and subcategories. Like a shared drive, the product brings files together. Unlike a simple folder of attachments, it also makes document ownership, approval, and time-sensitive status part of the experience.</p><p>I designed the interface in Figma, bringing the dashboard, document library, and upload experience into one consistent workspace. The application is used internally by the Aditya Birla team.</p></div>
+        <Section id="dms-overview" number="01" title="What the project is about">
+          <div className="train-reading"><p>The team works with documents across departments and business units. Finding a file is one part of the job. People also need to know who uploaded it, whether it has been approved, and when it is due to expire.</p><p>My role was UI design in Figma. I worked on the dashboard, folder navigation, search, and upload screens, including layouts for smaller screens.</p></div>
           <div className="train-evidence-grid">{[
             ["Find the right document", "Navigate by business context, then use document details to narrow the list."],
             ["Know what needs attention", "Surface pending approvals, expiring documents, and overdue items alongside everyday activity."],
@@ -51,13 +66,20 @@ export default function AdityaBirlaCaseStudy({ next }) {
           <div className="train-reading"><p>A file name alone rarely tells the whole story. The structure connects each document to a unit and a category, with subcategories providing more specific context. This gives users a way to browse when they know where a document belongs, even if they do not remember its name.</p></div>
           <figure className="dms-hierarchy"><ol>{[
             ["Unit", "Where the work belongs"], ["Category", "The type of work"], ["Subcategory", "A more specific grouping"], ["Document", "The file and its details"],
-          ].map(([title, detail], index) => <li key={title}><span>0{index + 1}</span><strong>{title}</strong><p>{detail}</p></li>)}</ol><figcaption>The navigation model moves from organisational context to an individual document.</figcaption></figure>
+          ].map(([title, detail], index) => <li key={title}><span>2.{index + 1}</span><strong>{title}</strong><p>{detail}</p></li>)}</ol><figcaption>The navigation model moves from organisational context to an individual document.</figcaption></figure>
+          <div className="dms-desktop-gallery">
+          <ScreenFigure screen={screens.departments} caption="Departments provide a visual starting point, with document counts and a choice of list or grid view." />
+          <ScreenFigure screen={screens.projects} caption="Within a unit, the sidebar keeps project folders visible while the table shows project dates, ownership, and available actions." />
+          </div>
           <div className="train-reading"><h3>Browse and search serve different needs.</h3><p>The sidebar keeps the hierarchy visible. Search and table filters help when a user already knows a name, unit, or document attribute. Keeping both routes available supports quick retrieval without forcing every task through the same navigation path.</p></div>
         </Section>
 
-        <Section id="dms-dashboard" number="03" title="Start with what matters today.">
+        <Section id="dms-dashboard" number="03" title="See what needs attention">
           <div className="train-reading"><p>The dashboard brings activity and document health into one view. Users can understand their available documents and recent activity, while approval and date-related statuses identify work that needs a closer look.</p></div>
-          <figure className="dms-screen-figure"><CaseStudyScreen screen={dashboard} /><figcaption>The dashboard design pairs summary cards with distribution charts and a working document table. Numbers shown are interface data, not measures of the project’s impact.</figcaption></figure>
+          <div className="dms-desktop-gallery">
+            <ScreenFigure screen={dashboard} caption="Dashboard summary, charts, and document activity. Figures are sample interface data." />
+            <ScreenFigure screen={screens.search} caption="Global search with date, unit, category, and subcategory filters." />
+          </div>
           <div className="dms-dashboard-groups">{[
             ["Activity", "Active users · Viewed · Uploaded · Downloaded", "A concise view of participation and document activity."],
             ["Access", "Total documents", "The document collection available to the user."],
@@ -66,7 +88,7 @@ export default function AdityaBirlaCaseStudy({ next }) {
           <div className="train-reading"><p>Unit-wise and category-wise charts add a broader view of the collection. The document table remains below the summary, keeping an overview and the next practical action close together.</p></div>
         </Section>
 
-        <Section id="dms-library" number="04" title="Make a dense library easier to read.">
+        <Section id="dms-library" number="04" title="Find and check documents">
           <div className="train-reading"><p>The table gives each document enough context to be identified without opening it first. The design groups the file’s identity, its organisational location, and the people and dates behind it.</p></div>
           <div className="train-table-wrap"><table><caption>The information behind a document</caption><thead><tr><th>Information</th><th>Fields</th><th>Why it matters</th></tr></thead><tbody>
             <tr><td>Document identity</td><td>Name, document number, file type</td><td>Recognise the item and distinguish similar files.</td></tr>
@@ -76,36 +98,35 @@ export default function AdityaBirlaCaseStudy({ next }) {
             <tr><td>Available actions</td><td>View, download, review where permitted</td><td>Take the next step from the document’s context.</td></tr>
           </tbody></table></div>
           <div className="train-reading"><h3>Keep the list useful as it grows.</h3><p>Search, category filters, and status controls narrow a large collection into a manageable working list. Clear file-type icons and consistent row alignment help users scan repeated information. Labels carry meaning alongside colour, so status does not depend on colour alone.</p></div>
+          <div className="dms-desktop-gallery">
+          <ScreenFigure screen={screens.knowledge} caption="Knowledge Sharing lists documents across departments and units, with uploader details and download actions." />
+            <ScreenFigure screen={screens.attachment} caption="The attachment form collects business context, validates references, and accepts the document file." />
+          </div>
         </Section>
 
-        <Section id="dms-approval" number="05" title="An upload is the beginning of a review.">
+        <Section id="dms-approval" number="05" title="Upload a file and track its approval">
           <div className="train-reading"><p>Team members can upload documents, but a supervisor must check that the correct document has been submitted before approving it. This separates contributing a file from confirming that it is ready for the shared collection.</p><p>The Add Attachment design collects the document’s unit, category, subcategory, reference details, and relevant dates alongside the file itself. Capturing context at upload helps the reviewer understand what the submission is and where it belongs.</p></div>
           <figure className="train-flow dms-review-flow"><ol>{["Choose the unit and category", "Add details and attach the file", "Submit for supervisor review", "Supervisor checks and approves"].map((step) => <li key={step}>{step}</li>)}</ol><figcaption>The core upload-to-approval workflow described for the project.</figcaption></figure>
-          <figure className="dms-screen-figure"><CaseStudyScreen screen={workflow} /><figcaption>The supplied design showcase brings together the document list, personal dashboard, and attachment form.</figcaption></figure>
+          <div className="dms-mobile-states">
+            <ScreenFigure screen={screens.mobileDashboard} mobile caption="A mobile overview of documents, charts, and pending work." />
+            <ScreenFigure screen={screens.mobileEmpty} mobile caption="An empty library offers a clear route to upload the first document." />
+            <ScreenFigure screen={screens.mobileUpload} mobile caption="After upload, a success message and approval label explain the document’s current state." />
+            <ScreenFigure screen={screens.mobileActions} mobile caption="The action queue separates work awaiting review from its history." />
+          </div>
           <div className="dms-design-note"><span>Design principle</span><h3>Show the state, not just the submission.</h3><p>A pending document should be distinguishable from an approved one. The uploader needs to know that the file is awaiting a decision; the supervisor needs a clear queue of items to review.</p></div>
         </Section>
 
-        <Section id="dms-interface" number="06" title="A familiar frame for detailed work.">
+        <Section id="dms-interface" number="06" title="The main design decisions">
           <div className="train-direction-list">{[
             ["A persistent navigation anchor", "The deep red sidebar gives the hierarchy a consistent home. A contrasting active item identifies the current destination as users move between categories."],
             ["An overview before the detail", "Summary cards establish the dashboard hierarchy. Charts explain the collection, and the table supports document-level work."],
             ["Consistent patterns for repeated tasks", "Aligned table fields, labelled filters, clear form labels, and a prominent upload action help connect browsing with contribution."],
             ["Status with a reason to act", "Pending approval, expiring, and overdue are distinct states. Keeping their labels explicit helps users understand whether a document needs review or date-related follow-up."],
-          ].map(([title, text], index) => <div key={title}><span>0{index + 1}</span><div><h3>{title}</h3><p>{text}</p></div></div>)}</div>
+          ].map(([title, text], index) => <div key={title}><span>6.{index + 1}</span><div><h3>{title}</h3><p>{text}</p></div></div>)}</div>
         </Section>
 
-        <Section id="dms-next" number="07" title="Where I would take it next.">
-          <p className="train-section-caption">Proposed enhancements to the core document and approval experience.</p>
-          <div className="train-evidence-grid">{[
-            ["Version history", "Keep previous revisions, identify the current approved version, and make changes easier to trace."],
-            ["Review comments", "Let supervisors return a submission with a clear reason and a direct path to upload a correction."],
-            ["Timely reminders", "Notify the right person when a review is waiting or a document is approaching expiry."],
-          ].map(([title, text]) => <div key={title}><h3>{title}</h3><p>{text}</p></div>)}</div>
-          <div className="train-reading"><h3>Validate with real document tasks.</h3><p>I would test finding a file in an unfamiliar category, uploading a document with the correct metadata, reviewing a pending submission, and locating an expiring item. Task completion, retrieval time, and classification errors would help assess the design and guide the next iteration.</p></div>
-        </Section>
-
-        <Section id="dms-reflection" number="08" title="The file is only part of the experience.">
-          <div className="train-reading"><p>This project brought together two needs: the familiarity of a shared drive and the structure of an internal approval system. The important design work was connecting a document with its place, its people, and its status, without losing the everyday simplicity of finding and uploading a file.</p><p>The result is a Figma-designed workspace that brings discovery, contribution, and review into one interface for the team. A next iteration would focus on validating those core tasks and making the review feedback loop more complete.</p></div>
+        <Section id="dms-reflection" number="07" title="What I took from this project">
+          <div className="train-reading"><p>The main challenge was keeping a detailed document system easy to follow. Folder navigation helps people browse, search helps them find a known file, and status labels show what needs attention.</p><p>The next step I would take is to test those tasks with the team: finding a document, uploading it in the right place, and reviewing a submission.</p></div>
         </Section>
       </article>
     </div>

@@ -42,6 +42,21 @@ export default function CaseStudyNav({ sections }) {
   }, [active]);
 
   return <nav ref={navRef} aria-label="Case study sections">
+    <div className="case-mobile-chapters">
+      <label>
+        <select aria-label="Jump to case study section" value={active} onChange={(event) => {
+          const id = event.target.value;
+          const section = document.getElementById(id);
+          if (!section) return;
+          setActive(id);
+          section.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth", block: "start" });
+          window.history.replaceState(null, "", `#${id}`);
+        }}>
+          {sections.map(([id, label]) => <option key={id} value={id}>{label}</option>)}
+        </select>
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><path d="m6 8 4 4 4-4" /></svg>
+      </label>
+    </div>
     <p>On this page</p>
     {sections.map(([id, label], index) => <a href={`#${id}`} key={id} className={active === id ? "is-active" : undefined} aria-current={active === id ? "location" : undefined}>
       <span>{String(index + 1).padStart(2, "0")}</span>{label}

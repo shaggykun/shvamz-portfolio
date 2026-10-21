@@ -6,15 +6,14 @@ import { useEffect, useRef, useState } from "react";
 import AboutText from "./components/about-text";
 import AboutIllustration from "./components/about-illustration";
 import CapabilityCloud from "./components/capability-cloud";
-import usePageMotion from "./components/use-page-motion";
 import ContactActions from "./components/contact-actions";
 import BrandMarquee from "./components/brand-marquee";
+import GalleryVideo from "./components/gallery-video";
 import { projects } from "./projects";
 
 
 export default function Home() {
   const mainRef = useRef(null);
-  usePageMotion(mainRef);
   const portraitRef = useRef(null);
   const creativeRef = useRef(null);
   const creativePausedRef = useRef(false);
@@ -33,7 +32,8 @@ export default function Home() {
     let touchAxis = null;
     let remainder = 0;
     let previousTime = performance.now();
-    let frame;
+    let frame = 0;
+    let galleryVisible = false;
     const resize = new ResizeObserver(() => { lap = group.getBoundingClientRect().width; });
     resize.observe(group);
     const moveBy = (distance) => {
@@ -44,13 +44,32 @@ export default function Home() {
       remainder = Math.abs(target - gallery.scrollLeft) < 1 ? target - gallery.scrollLeft : 0;
     };
     const tick = (time) => {
+      frame = 0;
       const elapsed = Math.min(time - previousTime, 50);
       previousTime = time;
       if (!reduce.matches && pointer === null && !creativePausedRef.current) {
         moveBy(lap * elapsed / 60000);
       }
-      frame = requestAnimationFrame(tick);
+      if (galleryVisible && !document.hidden && !reduce.matches) frame = requestAnimationFrame(tick);
     };
+    const syncPlayback = () => {
+      if (galleryVisible && !document.hidden && !reduce.matches) {
+        if (!frame) {
+          previousTime = performance.now();
+          frame = requestAnimationFrame(tick);
+        }
+      } else {
+        cancelAnimationFrame(frame);
+        frame = 0;
+      }
+    };
+    const visibilityObserver = new IntersectionObserver(([entry]) => {
+      galleryVisible = entry.isIntersecting;
+      syncPlayback();
+    });
+    visibilityObserver.observe(gallery);
+    document.addEventListener("visibilitychange", syncPlayback);
+    reduce.addEventListener("change", syncPlayback);
     const down = (event) => {
       if (event.pointerType === "touch" || !event.isPrimary || (event.pointerType === "mouse" && event.button !== 0)) return;
       pointer = event.pointerId;
@@ -120,9 +139,11 @@ export default function Home() {
     gallery.addEventListener("lostpointercapture", end);
     gallery.addEventListener("keydown", key);
     gallery.addEventListener("dragstart", preventDrag);
-    frame = requestAnimationFrame(tick);
     return () => {
       cancelAnimationFrame(frame);
+      visibilityObserver.disconnect();
+      document.removeEventListener("visibilitychange", syncPlayback);
+      reduce.removeEventListener("change", syncPlayback);
       resize.disconnect();
       gallery.removeEventListener("touchstart", touchDown);
       gallery.removeEventListener("touchmove", touchMove);
@@ -269,7 +290,6 @@ export default function Home() {
           </div>
           <h1>A designer<br className="hero-heading-break" /><span className="hero-heading-space"> </span>who<br className="hero-heading-desktop-break" /><span className="hero-heading-mobile-space"> </span><span className="hero-heading-end">moves<br className="hero-heading-break" /><span className="hero-heading-space"> </span><em>numbers.</em></span></h1>
           <p className="hero-copy">Hi, I&apos;m Shivam. For 6 years, I&apos;ve simplified complex products across <strong>FinTech, B2C, B2B and SaaS</strong> into clear, useful experiences.</p>
-          <div className="hero-trust"><span>6 years in design</span><span>UX research</span><span>UI design</span><span>Product</span></div>
           <a className="hero-cta" href="#work">Explore my projects</a>
         </section>
 
@@ -289,7 +309,7 @@ export default function Home() {
               <Link className="project-card home-project-card" href={`/work/${project.slug}`} key={project.slug} data-reveal>
                 <div className={`project-card-image visual-${index + 1}`} style={project.showcase || ["project-one", "project-two"].includes(project.slug) ? { aspectRatio: "1920 / 1320", minHeight: 0 } : undefined}>
                   {project.showcase ? <Image src={project.showcase.src} alt={project.showcase.alt} fill sizes="(max-width: 800px) 100vw, 50vw" style={{ objectFit: "contain" }} /> : project.slug === "project-one" ? <Image src="/images/rail-operations-showcase.webp" alt="Train staff application design showcase" fill sizes="(max-width: 800px) 100vw, 50vw" style={{ objectFit: "contain" }} /> : project.slug === "project-two" ? <Image src="/images/adani-electricity-showcase.webp" alt="Adani Electricity application design showcase" fill sizes="(max-width: 800px) 100vw, 50vw" style={{ objectFit: "contain" }} /> : project.slug === "project-four" ? <Image className="humbee-project-logo" src="/images/humbee-logo.webp" width={840} height={1078} sizes="165px" alt="HumBee avatar-first social network logo" /> : <div className="browser-mockup"><i /><i /><i /><div>{project.title}</div></div>}
-                  <span className="view-badge">View case</span>
+                  <span className="view-badge">{project.nda && <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="3" /><path d="M8 10V7a4 4 0 0 1 8 0v3" /></svg>}View Casestudy</span>
                 </div>
                 <div className="project-card-copy">
                   <div><h3>{project.title}</h3><p>{project.summary}</p></div>
@@ -312,9 +332,13 @@ export default function Home() {
                   ["dapper-branding.webp", "Dapper branding"],
                   ["swagatam-dosa-logo.webp", "Swagatam Dosa logo"],
                   ["va-creations.webp", "VA Creations"],
+                  ["cinewonto.webp", "Cinewonto branding"],
+                  ["farlearn.webp", "FarLearn branding"],
+                  ["owonto-social.webp", "Owonto social design: Discover, connect, create"],
+                  ["flasho-merchandise.webp", "Flasho merchandise, clothing, badges, and stickers"],
                 ].map(([file, title]) => <article className="creative-card" key={file}><div className="creative-media"><Image src={`/images/creative/${file}`} alt={duplicate ? "" : title} fill sizes="(max-width: 800px) 76vw, 340px" /></div></article>)}
-                <article className="creative-card"><div className="creative-media creative-video"><video src="/videos/tagbudy-animation.mp4" autoPlay muted loop playsInline preload="auto" aria-label={duplicate ? undefined : "Tagbudy animation"} /></div></article>
-                {[1, 2, 3, 4, 5].map((number) => <article className={`creative-card creative-coming-${number}`} key={number}><div className="creative-media creative-placeholder"><span className="creative-placeholder-mark" aria-hidden="true">✳</span><span className="creative-placeholder-status">COMING SOON</span></div></article>)}
+                <article className="creative-card"><div className="creative-media creative-video"><GalleryVideo src="/videos/tagbudy-animation.mp4" paused={creativePaused} label={duplicate ? undefined : "Tagbudy animation"} /></div></article>
+                <article className="creative-card"><div className="creative-media creative-video"><GalleryVideo src="/videos/social.mp4" paused={creativePaused} label={duplicate ? undefined : "Social motion design"} /></div></article>
               </div>)}
             </div>
           </div>

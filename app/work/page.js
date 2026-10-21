@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { projects } from "../projects";
 
-export const metadata = { title: "Work — Shivam Designs" };
+export const metadata = { title: "Work | Shivam Designs" };
 
 const covers = {
   "project-one": { src: "/images/rail-operations-showcase.webp", alt: "Train staff application design showcase" },
@@ -25,7 +25,7 @@ export default function WorkPage() {
             {project.nda && <span className="work-project-nda"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="3" /><path d="M8 10V7a4 4 0 0 1 8 0v3" /></svg>NDA protected</span>}
             <h2>{project.title}</h2>
             <p>{project.summary}</p>
-            <span className="work-project-action">{project.nda ? "View project" : "View case study"}</span>
+            <span className="work-project-action">{project.nda ? "View project" : "View Casestudy"}</span>
           </div>
         </Link>;
       })}

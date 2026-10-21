@@ -1,6 +1,23 @@
 // Add supplied application assets here; never substitute invented UI.
 // Set TRAIN_STAFF_PUBLISHED=true to hide pending sections and asset slots.
 export const trainStaffScreens = {
+  defectList: { label: "Defect list", src: "/images/train-staff/defect-list.webp", alt: "Defect list showing open and closed reports with coach and priority details" },
+  addDefect: { label: "Add defect", src: "/images/train-staff/add-defect.webp", alt: "Add Defect form with coach, equipment, description, and attachment action" },
+  viewDefect: { label: "View defect", src: "/images/train-staff/view-defect-updated.webp", alt: "View Defect screen with report details, status, and re-report and close actions" },
+  delayTime: { label: "Delay time", src: "/images/train-staff/delay-time.webp", alt: "Station delay report with a minutes and seconds picker and reason field" },
+  delayReason: { label: "Delay reason", src: "/images/train-staff/delay-reason.webp", alt: "Between-station delay report with duration, reason, and attachment action" },
+  delayAttachments: { label: "Delay attachments", src: "/images/train-staff/delay-attachments.webp", alt: "Delay report with attached files and an enabled save action" },
+  activeDutyList: { label: "Train duties", src: "/images/train-staff/active-duty-list.webp", alt: "Train duties showing current, upcoming, and finished services" },
+  activeDutyDetails: { label: "Active train details", src: "/images/train-staff/active-duty-details.webp", alt: "Active train details with route progress, coach facilities, occupancy, and train location" },
+  activePassengerCount: { label: "Passenger count", src: "/images/train-staff/active-passenger-count.webp", alt: "Passenger count entry by coach and station with occupancy status indicators" },
+  activeDutyAndroid: { label: "Android duty statuses", src: "/images/train-staff/active-duty-android.webp", alt: "Android My Duties screen showing active, amended, and cancelled train services" },
+  trainDuties: { label: "Train duties", src: "/images/train-staff/train-duties.webp", alt: "Train duties showing current, upcoming, and finished services" },
+  stationDuties: { label: "Station duties", src: "/images/train-staff/station-duties.webp", alt: "Station duties listing assigned stations and platforms" },
+  dutyStatuses: { label: "Duty statuses", src: "/images/train-staff/duty-statuses.webp", alt: "My Duties showing active, amended, and cancelled train services" },
+  trainFormation: { label: "Train formation", src: "/images/train-staff/train-formation.webp", alt: "Train formation showing unit information, coaches, accessibility, and occupancy" },
+  arrivals: { label: "Arrivals", src: "/images/train-staff/arrivals.webp", alt: "Manchester Piccadilly arrivals with filters and service statuses" },
+  serviceOverview: { label: "Service overview", src: "/images/train-staff/service-overview.webp", alt: "Train service overview with live status, journey information, maps, and passenger operations" },
+  trainDetails: { label: "Train details", src: "/images/train-staff/train-details.webp", alt: "Train details showing journey progress, facility and occupancy status, and a location map" },
   home: { label: "Home screen", src: null, alt: "Train Staff application home screen showing essential duty information and available actions" },
   duty: { label: "Active-duty screen", src: null, alt: "Train Staff active-duty screen showing the current duty context" },
   report: { label: "Reporting screen", src: null, alt: "Train Staff operational issue reporting screen" },

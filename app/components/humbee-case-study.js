@@ -1,9 +1,17 @@
 import Image from "next/image";
 import Link from "next/link";
 import CaseStudyNav from "./case-study-nav";
+import CaseStudyScreen from "./case-study-screen";
 import ScrollTop from "../work/[slug]/scroll-top";
 
-const sections = [["humbee-overview", "Overview"], ["humbee-research", "Research"], ["humbee-landscape", "The landscape"], ["humbee-insights", "Key themes"], ["humbee-personas", "User needs"], ["humbee-direction", "Product direction"], ["humbee-next", "Next steps"]];
+const sections = [["humbee-overview", "Overview"], ["humbee-research", "Research"], ["humbee-landscape", "The landscape"], ["humbee-insights", "Key themes"], ["humbee-personas", "User needs"], ["humbee-direction", "Product direction"], ["humbee-screens", "The screens"], ["humbee-next", "Next steps"]];
+
+function Screens({ title, description, screens, horizontal = false }) {
+  return <div className="humbee-screen-story">
+    <h3>{title}</h3><p>{description}</p>
+    <div className={`humbee-screen-gallery${horizontal ? " humbee-screen-row" : ""}`} style={{ "--screen-count": screens.length }}>{screens.map(([file, alt]) => <CaseStudyScreen key={file} screen={{ src: `/images/humbee/${file}.webp`, alt }} showLabel={false} />)}</div>
+  </div>;
+}
 
 function Section({ id, number, title, children }) {
   return <section className="train-section" id={id}><div className="train-section-title"><span>{number}</span><h2>{title}</h2></div>{children}</section>;
@@ -22,12 +30,6 @@ export default function HumBeeCaseStudy({ next }) {
         </div>
         <div className="humbee-brand-visual"><Image src="/images/humbee-logo.webp" width={840} height={1078} sizes="(max-width: 800px) 55vw, 24vw" alt="HumBee logo: a cream bee symbol on a coral app icon, with the HumBee wordmark" preload /></div>
       </div>
-      <dl className="train-project-details">
-        <div><dt>Product</dt><dd>Avatar-first social + dating</dd></div>
-        <div><dt>Focus</dt><dd>UX research & concept direction</dd></div>
-        <div><dt>Stage</dt><dd>Research before first build</dd></div>
-        <div><dt>Core idea</dt><dd>Private discovery · mutual reveal</dd></div>
-      </dl>
     </header>
 
     <div className="train-editorial-layout">
@@ -36,7 +38,7 @@ export default function HumBeeCaseStudy({ next }) {
         <Section id="humbee-overview" number="01" title="Meet the person before the profile.">
           <div className="train-reading"><p>Photo-first discovery can expose someone’s identity before they are comfortable sharing it. HumBee explores a different starting point: an avatar, shared interests, and a conversation.</p><p>The concept gives people control over disclosure. Identity reveal is optional and requires agreement from both sides.</p></div>
           <div className="humbee-opportunity"><span className="humbee-label">The opportunity</span><h3>Make the first hello feel more comfortable.</h3><p>Create space for personality and conversation before appearance becomes the first filter.</p></div>
-          <figure className="humbee-concept-flow"><ol><li><span>01</span><h3>Discover</h3><p>Meet through an avatar and shared interests.</p></li><li><span>02</span><h3>Connect</h3><p>Start a conversation while identity stays private.</p></li><li><span>03</span><h3>Reveal</h3><p>Share identity only when both people choose to.</p></li></ol><figcaption>Proposed interaction model · not a shipped product flow.</figcaption></figure>
+          <figure className="humbee-concept-flow"><ol><li><span>1.1</span><h3>Discover</h3><p>Meet through an avatar and shared interests.</p></li><li><span>1.2</span><h3>Connect</h3><p>Start a conversation while identity stays private.</p></li><li><span>1.3</span><h3>Reveal</h3><p>Share identity only when both people choose to.</p></li></ol><figcaption>Proposed interaction model · not a shipped product flow.</figcaption></figure>
         </Section>
 
         <Section id="humbee-research" number="02" title="Understand comfort before designing screens.">
@@ -46,7 +48,7 @@ export default function HumBeeCaseStudy({ next }) {
             ["Listen to expectations", "Survey and interview notes focused on privacy, safety, matching, and disclosure."],
             ["Map the experience", "Journey and mental-model mapping to connect user concerns with product decisions."],
             ["Prioritise the concept", "Persona synthesis and feature prioritisation before a first clickable prototype."],
-          ].map(([title, description], index) => <div key={title}><span>0{index + 1}</span><h3>{title}</h3><p>{description}</p></div>)}</div>
+          ].map(([title, description], index) => <div key={title}><span>2.{index + 1}</span><h3>{title}</h3><p>{description}</p></div>)}</div>
           <details className="humbee-research-note"><summary>Research context</summary><p>The document describes students and IT professionals as the intended research audience. The workbook includes additional draft participant entries and no raw survey responses, so sample totals and survey averages are omitted pending confirmation. Qualitative themes below summarise the supplied notes; they are not launch outcomes.</p></details>
         </Section>
 
@@ -75,7 +77,7 @@ export default function HumBeeCaseStudy({ next }) {
             ["The private student", "Wants to meet people without immediate recognition by classmates or strangers.", "Avatar-first discovery, disclosure control, and visible safety tools."],
             ["The fast explorer", "Enjoys new connections but loses interest in repetitive swiping.", "Quick discovery with shared interests and a clear reason to connect."],
             ["The working privacy seeker", "Wants personal social or dating activity separate from professional circles.", "Discreet discovery and credible signals before revealing identity."],
-          ].map(([title, goal, need], index) => <div key={title}><span className="humbee-persona-index">0{index + 1}</span><div><h3>{title}</h3><p>{goal}</p><p><strong>Needs:</strong> {need}</p></div></div>)}</div>
+          ].map(([title, goal, need], index) => <div key={title}><span className="humbee-persona-index">5.{index + 1}</span><div><h3>{title}</h3><p>{goal}</p><p><strong>Needs:</strong> {need}</p></div></div>)}</div>
         </Section>
 
         <Section id="humbee-direction" number="06" title="Build around privacy, relevance, and choice.">
@@ -85,11 +87,26 @@ export default function HumBeeCaseStudy({ next }) {
             ["Set expectations", "Dating or friendship intent could make the purpose of a connection clearer."],
             ["Support trust", "Moderation and verification signals need to balance privacy with accountability."],
           ].map(([title, text]) => <div key={title}><div><h3>{title}</h3><p>{text}</p></div></div>)}</div>
-          <figure className="humbee-journey"><p className="humbee-label">Proposed flow to prototype</p><ol>{["Sign up", "Create avatar", "Find a match", "First chat", "Mutual reveal"].map((step) => <li key={step}>{step}</li>)}</ol><figcaption>Safety controls should remain accessible throughout the journey. Detailed UI and interaction rules are still to be designed.</figcaption></figure>
+          <figure className="humbee-journey"><p className="humbee-label">Proposed flow to prototype</p><ol>{["Sign up", "Create avatar", "Find a match", "First chat", "Mutual reveal"].map((step) => <li key={step}>{step}</li>)}</ol><figcaption>The screens below explore this journey. Safety controls and the rules for mutual reveal still need to be tested.</figcaption></figure>
         </Section>
 
-        <Section id="humbee-next" number="07" title="From research to a first prototype.">
-          <div className="train-reading"><p>The supplied project documents end before detailed UI design and development. The next step is to translate the research direction into information architecture, user flows, and a clickable prototype.</p><p>Validation should cover sign-up, avatar creation, match relevance, starting a conversation, mutual reveal, and finding safety actions. Iteration would focus on where people hesitate or misunderstand how privacy works.</p></div>
+        <Section id="humbee-screens" number="07" title="How the idea looks on screen.">
+          <Screens horizontal title="Getting started, finding people, and managing a profile" description="From the first welcome to suggested matches and the profile dashboard, these screens bring the main app journey together." screens={[
+            ["splash", "HumBee splash screen with the app icon and wordmark"],
+            ["welcome", "HumBee welcome screen with matching introduction, sign-up, and login"],
+            ["sign-up", "HumBee sign-up screen with phone number and birthday fields"],
+            ["home", "HumBee home screen with avatar matches, compatibility scores, and profile prompts"],
+            ["profile", "HumBee profile dashboard with an avatar, profile completion, matches, and settings"],
+          ]} />
+          <Screens title="Chatting before and after a reveal" description="Avatar conversations and revealed connections have separate lists. Inside a chat, the reveal action sits above the conversation. These screens show the visual direction; the agreement steps for a mutual reveal still need to be worked through." screens={[
+            ["avatar-chats", "HumBee chat list showing connections represented by avatars in the Other tab"],
+            ["conversation", "HumBee conversation with an avatar and Reveal and Delete actions"],
+            ["revealed-chats", "HumBee Revealed chat list showing connections with profile photos"],
+          ]} />
+        </Section>
+
+        <Section id="humbee-next" number="08" title="Testing the design with people.">
+          <div className="train-reading"><p>With these screens in place, the next step is to connect them into a clickable prototype and test whether the experience makes sense to people.</p><p>Validation should cover sign-up, avatar creation, match relevance, starting a conversation, mutual reveal, and finding safety actions. Iteration would focus on where people hesitate or misunderstand how privacy works.</p></div>
           <div className="humbee-validation"><span className="humbee-label">Questions for the next round</span><ul><li>Do people understand what stays private before a reveal?</li><li>Does a fast match feel relevant enough to start a conversation?</li><li>Can both people control disclosure without pressure?</li><li>Can people find block and report when they need them?</li></ul></div>
           <p className="train-evidence-note">No shipped features, completed usability results, or business outcomes are claimed for this research-stage concept.</p>
         </Section>

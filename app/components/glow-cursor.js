@@ -38,9 +38,21 @@ export default function GlowCursor() {
     let interactiveTarget = null;
     let width = window.innerWidth;
     let height = window.innerHeight;
+    let scrollX = window.scrollX;
+    let scrollY = window.scrollY;
+    let pendingScrollX = 0;
+    let pendingScrollY = 0;
 
     const draw = (time) => {
       context.clearRect(0, 0, width, height);
+      // Let existing light follow the page while the pointer stays in viewport space.
+      if (pendingScrollX || pendingScrollY) {
+        points.forEach((point) => {
+          point.x -= pendingScrollX;
+          point.y -= pendingScrollY;
+        });
+        pendingScrollX = pendingScrollY = 0;
+      }
       // Sample once per display frame, regardless of the mouse's polling rate.
       const latest = points[points.length - 1];
       if (pointer && (!latest || pointer.x !== latest.x || pointer.y !== latest.y) && time - pointer.time < trailLifetime) {
@@ -83,6 +95,7 @@ export default function GlowCursor() {
       cancelAnimationFrame(frame);
       frame = 0;
       points = [];
+      pendingScrollX = pendingScrollY = 0;
       pointer = null;
       visible = false;
       interactiveTarget = null;
@@ -121,7 +134,24 @@ export default function GlowCursor() {
     const out = (event) => { if (!event.relatedTarget) hide(); };
     const down = () => cursor.classList.add("is-pressed");
     const up = () => cursor.classList.remove("is-pressed");
-    const scroll = () => { if (pointer) interactiveAt(document.elementFromPoint(pointer.x, pointer.y)); };
+    const scroll = () => {
+      const deltaX = window.scrollX - scrollX;
+      const deltaY = window.scrollY - scrollY;
+      scrollX = window.scrollX;
+      scrollY = window.scrollY;
+      if (!pointer || !visible || !enabled()) return;
+      const target = document.elementFromPoint(pointer.x, pointer.y);
+      if (target?.closest("dialog[open]")) { hide(); return; }
+      interactiveAt(target);
+      if (!deltaX && !deltaY) return;
+      const now = performance.now();
+      // Seed a fresh trail when scrolling starts after the mouse has been idle.
+      if (now - pointer.time >= trailLifetime) points = [{ x: pointer.x, y: pointer.y, time: now }];
+      pendingScrollX += deltaX;
+      pendingScrollY += deltaY;
+      pointer.time = now;
+      if (!frame) frame = requestAnimationFrame(draw);
+    };
     const visibility = () => { if (document.hidden) hide(); };
     const resize = () => {
       hide();

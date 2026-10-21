@@ -1,4 +1,4 @@
-import Image from "next/image";
+import AdaniHeroImage from "./adani-hero-image";
 import Link from "next/link";
 import CaseStudyNav from "./case-study-nav";
 import CaseStudyScreen from "./case-study-screen";
@@ -29,13 +29,14 @@ export default function AdaniCaseStudy({ next }) {
       <Link className="train-back" href="/work">All projects</Link>
       <div className="train-hero-layout">
         <div className="train-hero-copy"><p className="train-eyebrow">Adani Electricity · Mobile application</p><h1>Everyday energy.<br /><em>Clearer control.</em></h1><p className="train-lead">A customer-facing interface that brings bills, electricity consumption, essential services, and support into one mobile experience. My work focused on UI design, supported by competitive analysis.</p></div>
-        <div className="adani-hero-visual"><div className="adani-hero-halo" aria-hidden="true" /><Image src="/images/adani/welcome.webp" width={750} height={1624} sizes="(max-width: 800px) 56vw, 260px" alt={screens.welcome.alt} preload /><span className="adani-visual-label">Your electricity. At a glance.</span></div>
+        <AdaniHeroImage src={screens.welcome.src} alt={screens.welcome.alt} />
       </div>
       <dl className="train-project-details"><div><dt>Role</dt><dd>UI Designer</dd></div><div><dt>Research contribution</dt><dd>Competitive analysis</dd></div><div><dt>Product</dt><dd>Electricity customer app</dd></div><div><dt>Focus</dt><dd>Account · Bills · Services</dd></div></dl>
     </header>
     <div className="train-editorial-layout"><aside className="train-section-nav"><CaseStudyNav sections={sections} /></aside><article className="train-article">
       <Section id="adani-overview" number="01" title="More than a monthly bill.">
-        <div className="train-reading"><p>Adani Electricity is a power distribution utility serving Mumbai. Its digital services let customers manage accounts, pay bills, and access electricity consumption information.</p><p>The interface connects those everyday needs: enter an account, understand what is due, take action, and find help. The selected designs cover welcome and account verification, a service-rich home, service discovery, and payment and consumption insights.</p></div>
+        <div className="train-reading"><p>Adani Electricity supplies electricity in Mumbai. Its digital services give customers a way to manage their accounts and check energy usage without visiting a service centre. For this project, I focused on the mobile interface and how customers find their way through those everyday tasks.</p><p>The interface connects those everyday needs: enter an account, understand what is due, take action, and find help. The selected designs cover welcome and account verification, a service-rich home, service discovery, and payment and consumption insights.</p></div>
+        <div className="train-reading"><p>The wider service goes beyond paying a bill. Adani Electricity’s customer services include bill and payment history, consumption information, meter-reading submission, and requests for help. That gives the app two jobs: make a routine payment quick, and make less frequent tasks easy to find when something needs attention.</p><p>In the designs, I treated the bill summary as the starting point. Services and support remain nearby, so someone checking what they owe can also look into their usage or find the next step for an account issue.</p></div>
         <div className="train-evidence-grid">{[["Understand", "Bring the amount due, billing period, and consumption together."], ["Act", "Give bill viewing and payment a clear place in the hierarchy."], ["Get support", "Keep complaints, outage checks, and assistance within the service experience."]].map(([title, text]) => <div key={title}><h3>{title}</h3><p>{text}</p></div>)}</div>
         <p className="train-evidence-note">Company context: <a href="https://www.adanielectricity.com/corporate/who-we-are" target="_blank" rel="noreferrer">Adani Electricity</a> · <a href="https://www.adanielectricity.com/services" target="_blank" rel="noreferrer">Customer services</a></p>
       </Section>
@@ -74,7 +75,7 @@ export default function AdaniCaseStudy({ next }) {
         <p className="train-evidence-note">Palette values are visual references from the supplied screens, rather than a formal brand specification.</p>
       </Section>
       <Section id="adani-reflection" number="08" title="Clarity to carry into the next iteration.">
-        <div className="train-reading"><p>The key design consideration is balancing an immediate task—understanding and paying a bill—with a wider service offering. A strong summary and a recognisable primary action help give a dense home screen a clear starting point.</p><p>A next validation round could assess account entry, bill comprehension, service discovery, and finding urgent assistance. Accessibility checks should cover contrast, text scaling, touch targets, and chart interpretation.</p></div>
+        <div className="train-reading"><p>The key design consideration is balancing the immediate task of understanding and paying a bill with a wider service offering. A strong summary and a recognisable primary action help give a dense home screen a clear starting point.</p><p>A next validation round could assess account entry, bill comprehension, service discovery, and finding urgent assistance. Accessibility checks should cover contrast, text scaling, touch targets, and chart interpretation.</p></div>
         <p className="train-evidence-note">This case study presents supplied UI designs and the confirmed competitive-analysis contribution. Testing results and launch outcomes have not been supplied.</p>
       </Section>
     </article></div>

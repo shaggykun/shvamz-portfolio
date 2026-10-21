@@ -2,8 +2,8 @@ import Link from "next/link";
 import Image from "next/image";
 
 export const metadata = {
-  title: "About — Shivam Designs",
-  description: "Meet Shivam, a Senior Product Designer working across clients, products, and domains—from research and product experiences to interfaces, brand identity, and motion.",
+  title: "About | Shivam Designs",
+  description: "Meet Shivam, a Senior Product Designer working across clients, products, and domains, from research and product experiences to interfaces, brand identity, and motion.",
 };
 
 const capabilities = [
@@ -27,15 +27,15 @@ export default function AboutPage() {
       <div className="about-profile-heading">
         <p className="page-eyebrow">A little about me</p>
         <h1>A designer.<br /><em>A curious mind.</em></h1>
-        <p className="about-profile-lead">Hi, I&apos;m Shivam, a Senior Product Designer with 6 years of experience turning complex ideas into clear, useful digital experiences.</p>
+        <p className="about-profile-lead">Hi, I&apos;m Shivam, a Senior Product Designer. I love creating new things, figuring out how they could work, and turning an idea into something people can use.</p>
         <div className="about-profile-actions"><Link className="hero-cta" href="/work">Explore my work</Link><Link className="pill" href="/contact">Get in touch</Link></div>
       </div>
       <div className="about-profile-portrait"><Image src="/images/shivam-about-portrait.webp" width={1200} height={1599} sizes="(max-width: 800px) 90vw, 440px" loading="eager" alt="Shivam standing outdoors against a city skyline at night" /></div>
     </header>
 
     <section className="about-profile-story" aria-labelledby="about-story-title">
-      <div><p className="page-eyebrow">Across clients &amp; contexts</p><h2 id="about-story-title">Different challenges.<br />The same curiosity.</h2></div>
-      <div className="about-profile-reading"><p>I&apos;ve worked on multiple projects with multiple clients, collaborating with product teams and developers to move from understanding a problem to designing a practical solution.</p><p>My work spans FinTech, rail operations, utility services, enterprise tools, wearables, and social products, across B2C, B2B, and SaaS experiences. That range has taught me to adapt to different users, business needs, and levels of complexity.</p><p>A customer checking a bill and a team member reviewing a document need different things. I focus on understanding that context, organising the information, and making the next action clear.</p><ul className="about-domain-tags" aria-label="Domains and product types">{["FinTech", "Rail & mobility", "Utilities", "Enterprise & SaaS", "Wearables", "Social products", "B2C & B2B"].map((domain) => <li key={domain}>{domain}</li>)}</ul></div>
+      <div><p className="page-eyebrow">Across clients &amp; contexts</p><h2 id="about-story-title">I like making things<br />and learning as I go.</h2></div>
+      <div className="about-profile-reading"><p>I enjoy working with people as much as I enjoy designing. Talking through an idea, asking questions, and listening to another perspective often helps me see a better way forward. Communication and collaboration are a big part of how I work.</p><p>I&apos;ve worked on finance, railway, utility, enterprise, wearable, and social products. Each project gives me something new to learn. I pick things up quickly, and I enjoy getting to know a product and the people who use it.</p><p>I&apos;m always learning, whether that means trying a new tool, taking feedback on a design, or exploring something outside my usual work. I like being able to look back at something I made and see how I could make it better now.</p><ul className="about-domain-tags" aria-label="Domains and product types">{["FinTech", "Rail & mobility", "Utilities", "Enterprise & SaaS", "Wearables", "Social products", "B2C & B2B"].map((domain) => <li key={domain}>{domain}</li>)}</ul></div>
     </section>
 
     <section className="about-profile-capabilities" aria-labelledby="about-capabilities-title">
@@ -44,17 +44,17 @@ export default function AboutPage() {
     </section>
 
     <section className="about-profile-process" aria-labelledby="about-process-title">
-      <div className="about-profile-section-heading"><p className="page-eyebrow">How I approach the work</p><h2 id="about-process-title">Think clearly.<br />Make thoughtfully.</h2></div>
+      <div className="about-profile-section-heading"><p className="page-eyebrow">How I approach the work</p><h2 id="about-process-title">How I work with a team</h2></div>
       <ol className="about-process-steps">{[
-        ["Understand the context", "Start with the people, the problem, and the business needs. Ask questions before deciding what the solution should be."],
-        ["Explore and make", "Map the experience, try different directions, and use wireframes and prototypes to make ideas concrete."],
-        ["Refine together", "Work with the team, consider feedback and implementation constraints, and refine both the overall flow and the small details."],
+        ["Understand the context", "I start by asking questions and listening. I want to understand who we are designing for, what they need, and what the team is trying to achieve."],
+        ["Explore and make", "I sketch, map out the steps, and try different ideas. Putting something in front of the team gives us a clearer starting point for a conversation."],
+        ["Refine together", "I share work early and talk it through with developers and teammates. I am happy to change direction when feedback or a practical constraint points to a better solution."],
       ].map(([title, text]) => <li key={title}><h3>{title}</h3><p>{text}</p></li>)}</ol>
       <Link className="pill" href="/contact">Let&apos;s work together</Link>
     </section>
 
     <section className="about-profile-personal" aria-labelledby="about-personal-title">
-      <div className="about-profile-section-heading"><p className="page-eyebrow">Beyond the design file</p><h2 id="about-personal-title">There&apos;s more<br /><em>to the story.</em></h2><p>Outside work, I travel, make films, listen to music, and watch movies. Different ways to explore, observe, and enjoy a good story.</p></div>
+      <div className="about-profile-section-heading"><p className="page-eyebrow">Beyond the design file</p><h2 id="about-personal-title">There&apos;s more<br /><em>to the story.</em></h2><p>When I&apos;m away from design, I love travelling and making films. I enjoy noticing the little things in a new place and finding a way to capture them. Music and movies are a big part of my downtime too. Sometimes I want to think about a story; sometimes I just want to get lost in one.</p></div>
       <div className="about-interests-grid">{interests.map(([title, description, icon]) => <article key={title}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={icon} /></svg><h3>{title}</h3><p>{description}</p></article>)}</div>
     </section>
   </main>;
