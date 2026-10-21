@@ -287,6 +287,7 @@ export default function Home() {
               <div className="hero-portrait-person"><Image src="/images/hero-portrait-transparent-v2.webp" alt="Shivam standing with casually crossed arms" fill sizes="(max-width: 800px) 100vw, 40vw" preload /></div>
               <div className="t-tilt-glare" aria-hidden="true" />
             </div>
+            <span className="hero-portrait-hint">Tap &amp; hold to move the image</span>
           </div>
           <h1>A designer<br className="hero-heading-break" /><span className="hero-heading-space"> </span>who<br className="hero-heading-desktop-break" /><span className="hero-heading-mobile-space"> </span><span className="hero-heading-end">moves<br className="hero-heading-break" /><span className="hero-heading-space"> </span><em>numbers.</em></span></h1>
           <p className="hero-copy">Hi, I&apos;m Shivam. For 6 years, I&apos;ve simplified complex products across <strong>FinTech, B2C, B2B and SaaS</strong> into clear, useful experiences.</p>
